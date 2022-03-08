@@ -129,6 +129,10 @@ public abstract class AbstractEndpoint<S> {
         UNBOUND, BOUND_ON_INIT, BOUND_ON_START, SOCKET_CLOSED_ON_STOP
     }
 
+    /**
+     * 监听socket请求，每个线程运行一个Acceptor,
+     * Connector启动时 Endpoint创建多个线程(即Acceptor)
+     */
     public abstract static class Acceptor implements Runnable {
         public enum AcceptorState {
             NEW, RUNNING, PAUSED, ENDED
@@ -446,6 +450,7 @@ public abstract class AbstractEndpoint<S> {
 
     /**
      * Acceptor thread count.
+     * Endpoint运行的线程数量 监听端口
      */
     protected int acceptorThreadCount = 1;
 

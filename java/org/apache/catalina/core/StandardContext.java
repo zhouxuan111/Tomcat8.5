@@ -4974,6 +4974,7 @@ public class StandardContext extends ContainerBase
      *
      * @exception LifecycleException if this component detects a fatal error
      *  that prevents this component from being used
+     *  StandradContext的启动过程
      */
     @Override
     protected synchronized void startInternal() throws LifecycleException {
@@ -4983,6 +4984,7 @@ public class StandardContext extends ContainerBase
         }
 
         // Send j2ee.state.starting notification
+        //添加监听器NotificationalListener来监听Context的启动
         if (this.getObjectName() != null) {
             Notification notification = new Notification("j2ee.state.starting",
                     this.getObjectName(), sequenceNumber.getAndIncrement());
@@ -4994,6 +4996,7 @@ public class StandardContext extends ContainerBase
 
         // Currently this is effectively a NO-OP but needs to be called to
         // ensure the NamingResources follows the correct lifecycle
+        // 启动JNDI资源
         if (namingResources != null) {
             namingResources.start();
         }
@@ -5002,6 +5005,7 @@ public class StandardContext extends ContainerBase
         postWorkDirectory();
 
         // Add missing components as necessary
+        // 初始化当前Context使用的WebResourceRoot并启动
         if (getResources() == null) {   // (1) Required by Loader
             if (log.isDebugEnabled()) {
                 log.debug("Configuring default Resources");
@@ -5014,22 +5018,27 @@ public class StandardContext extends ContainerBase
                 ok = false;
             }
         }
+        // WebResourceRoot维护web应用的所有资源（Class文件，jar包，及其他资源）
+        // 主要用于类加载和按照路径查找资源文件。
         if (ok) {
             resourcesStart();
         }
 
+        // 创建web应用类加载器
         if (getLoader() == null) {
             WebappLoader webappLoader = new WebappLoader();
             webappLoader.setDelegate(getDelegate());
             setLoader(webappLoader);
         }
 
+        // 设置Cookie处理器
         // An explicit cookie processor hasn't been specified; use the default
         if (cookieProcessor == null) {
             cookieProcessor = new Rfc6265CookieProcessor();
         }
 
         // Initialize character set mapper
+        //获取字符集映射
         getCharsetMapper();
 
         // Validate required extensions
@@ -5073,6 +5082,7 @@ public class StandardContext extends ContainerBase
         // Binding thread
         ClassLoader oldCCL = bindThread();
 
+
         try {
             if (ok) {
                 // Start our subordinate components, if any
@@ -5082,6 +5092,7 @@ public class StandardContext extends ContainerBase
                 }
 
                 // since the loader just started, the webapp classloader is now
+                // 启动web应用类加载器。此时真正创建WebappClassLoaderBase
                 // created.
                 if (loader.getClassLoader() instanceof WebappClassLoaderBase) {
                     WebappClassLoaderBase cl = (WebappClassLoaderBase) loader.getClassLoader();

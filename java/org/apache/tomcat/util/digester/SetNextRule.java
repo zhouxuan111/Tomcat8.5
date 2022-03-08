@@ -28,6 +28,8 @@ import org.apache.tomcat.util.IntrospectionUtils;
  * It is possible that this may break (some) code
  * written against release 1.1.1 or earlier.
  * See {@link #isExactMatch()} for more details.</p>
+ * end()方法调用时，找到栈顶部对象之后的对象，调用指定的方法，并将栈顶部对象作为参数传入，用于设置
+ * 父对象的子对象，建立父子关系
  */
 
 public class SetNextRule extends Rule {

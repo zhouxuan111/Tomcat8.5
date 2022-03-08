@@ -456,7 +456,7 @@ public final class Bootstrap {
      * scripts.
      *
      * @param args Command line arguments to be processed
-     * 应用服务器的启动入口
+     * 应用服务器的启动入口 catalina.sh中的调用 BootStrap.main()
      */
     public static void main(String args[]) {
 

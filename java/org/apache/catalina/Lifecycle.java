@@ -182,7 +182,7 @@ public interface Lifecycle {
 
     /**
      * Add a LifecycleEvent listener to this component.
-     *
+     * 添加监听器
      * @param listener The listener to add
      */
     public void addLifecycleListener(LifecycleListener listener);
@@ -194,6 +194,7 @@ public interface Lifecycle {
      * @return An array containing the life cycle listeners associated with this
      *         life cycle. If this component has no listeners registered, a
      *         zero-length array is returned.
+     *  获取监听器
      */
     public LifecycleListener[] findLifecycleListeners();
 
@@ -202,6 +203,7 @@ public interface Lifecycle {
      * Remove a LifecycleEvent listener from this component.
      *
      * @param listener The listener to remove
+     * 移除监听器
      */
     public void removeLifecycleListener(LifecycleListener listener);
 

@@ -278,6 +278,7 @@ public class Catalina {
      * Create and configure the Digester we will be using for startup.
      * @return the main digester to parse server.xml
      * 主要使用Digester来实现解析server.xml
+     * Digester非线程安全
      */
     protected Digester createStartDigester() {
         long t1=System.currentTimeMillis();
@@ -304,7 +305,7 @@ public class Catalina {
         digester.addObjectCreate("Server",
                                  "org.apache.catalina.core.StandardServer",
                                  "className");
-        // 匹配到Server节点时，设置对象属性到Catalina
+        // 匹配到Server节点时，创建属性 server
         digester.addSetProperties("Server");
         // 匹配到Server 调用Catalina.setServer()方法
         digester.addSetNext("Server",
@@ -723,7 +724,7 @@ public class Catalina {
 
         long t1 = System.nanoTime();
 
-        // Start the new server
+        // 调用Server.start()方法
         try {
             getServer().start();
         } catch (LifecycleException e) {
@@ -741,7 +742,8 @@ public class Catalina {
             log.info("Server startup in " + ((t2 - t1) / 1000000) + " ms");
         }
 
-        // Register shutdown hook
+        // Register shutdown hook 注册ShutDownHook对象，调用Catalina.stop()方法停止tomcat
+        //实际调用Server.stop()方法
         if (useShutdownHook) {
             if (shutdownHook == null) {
                 shutdownHook = new CatalinaShutdownHook();

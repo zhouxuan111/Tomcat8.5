@@ -18,6 +18,7 @@ package javax.websocket;
 
 /**
  * 用于启动socket监听，该接口按照I/O方式进行分类实现
+ * NIO NIO2 APR
  */
 public abstract class Endpoint {
 

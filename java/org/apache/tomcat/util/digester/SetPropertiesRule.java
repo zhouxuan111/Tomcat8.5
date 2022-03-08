@@ -24,6 +24,7 @@ import org.xml.sax.Attributes;
 /**
  * <p>Rule implementation that sets properties on the object at the top of the
  * stack, based on attributes with corresponding names.</p>
+ * begin()方法调用时，将xml节点的属性设置到栈顶部的对象中
  */
 
 public class SetPropertiesRule extends Rule {

@@ -107,6 +107,7 @@ public abstract class Rule {
      * @param attributes The attribute list of this element
      *
      * @throws Exception if an error occurs while processing the event
+     * 读取到匹配节点时开始调用，将该节点的所有属性传入
      */
     public void begin(String namespace, String name, Attributes attributes) throws Exception {
         // NO-OP by default.
@@ -126,6 +127,7 @@ public abstract class Rule {
      * @param text The text of the body of this element
      *
      * @throws Exception if an error occurs while processing the event
+     * 读取到匹配节点内容时调用，不是子节点，嵌入的内容为文本
      */
     public void body(String namespace, String name, String text) throws Exception {
         // NO-OP by default.
@@ -137,12 +139,13 @@ public abstract class Rule {
      * is encountered. The default implementation is a NO-OP.
      *
      * @param namespace the namespace URI of the matching element, or an empty
-     *                  string if the parser is not namespace aware or the
+     *                  string if Othe parser is not namespace aware or the
      *                  element has no namespace
      * @param name the local name if the parser is namespace aware, or just the
      *             element name otherwise
      *
      * @throws Exception if an error occurs while processing the event
+     * 读取到结束节点是调用，只有子节点处理完成才会调用
      */
     public void end(String namespace, String name) throws Exception {
         // NO-OP by default.
@@ -154,6 +157,7 @@ public abstract class Rule {
      * called, to allow Rules to remove temporary data.
      *
      * @throws Exception if an error occurs while processing the event
+     * 整个parse完成时调用
      */
     public void finish() throws Exception {
         // NO-OP by default.

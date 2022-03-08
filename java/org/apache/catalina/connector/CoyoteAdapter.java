@@ -60,6 +60,10 @@ import org.apache.tomcat.util.res.StringManager;
  *
  * @author Craig R. McClanahan
  * @author Remy Maucherat
+ * 将Connector 与 Mapper 和Container的联系
+ * Mapper维系 Connector与Container之间的映射关系
+ *
+ * WEB请求的处理入口
  */
 public class CoyoteAdapter implements Adapter {
 
@@ -74,7 +78,6 @@ public class CoyoteAdapter implements Adapter {
 
     private static final EnumSet<SessionTrackingMode> SSL_ONLY =
         EnumSet.of(SessionTrackingMode.SSL);
-
     public static final int ADAPTER_NOTES = 1;
 
 
@@ -316,11 +319,18 @@ public class CoyoteAdapter implements Adapter {
         return success;
     }
 
-
+    /**
+     * 首先由Connector读取请求数据，然后调用CoyoteAdapter.service()方法完成请求处理
+     * @param req The request object
+     * @param res The response object
+     *
+     * @throws Exception
+     */
     @Override
     public void service(org.apache.coyote.Request req, org.apache.coyote.Response res)
             throws Exception {
 
+        // 1、根据Connector的请求和响应创建Servlet请求和响应
         Request request = (Request) req.getNote(ADAPTER_NOTES);
         Response response = (Response) res.getNote(ADAPTER_NOTES);
 
@@ -352,18 +362,22 @@ public class CoyoteAdapter implements Adapter {
 
         req.getRequestProcessor().setWorkerThreadName(THREAD_NAME.get());
 
+        //2、解析请求参数并完成请求映射
         try {
             // Parse and set Catalina and configuration specific
             // request parameters
             postParseSuccess = postParseRequest(req, request, res, response);
             if (postParseSuccess) {
-                //check valves if we support async
+                //
                 request.setAsyncSupported(
                         connector.getService().getContainer().getPipeline().isAsyncSupported());
                 // Calling the container
+                // 获取第一个Value，并执行，完成请求处理
                 connector.getService().getContainer().getPipeline().getFirst().invoke(
                         request, response);
             }
+
+            // 若是异步请求处理，设置异步请求读取监听器
             if (request.isAsync()) {
                 async = true;
                 ReadListener readListener = req.getReadListener();
@@ -390,7 +404,9 @@ public class CoyoteAdapter implements Adapter {
                 if (!request.isAsyncCompleting() && throwable != null) {
                     request.getAsyncContextInternal().setErrorState(throwable, true);
                 }
-            } else {
+            }
+            // 同步请求，关闭请求输入流，响应输出流
+            else {
                 request.finishRequest();
                 response.finishResponse();
             }

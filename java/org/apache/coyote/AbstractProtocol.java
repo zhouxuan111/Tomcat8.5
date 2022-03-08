@@ -74,6 +74,7 @@ public abstract class AbstractProtocol<S> implements ProtocolHandler,
      * Endpoint that provides low-level network I/O - must be matched to the
      * ProtocolHandler implementation (ProtocolHandler using NIO, requires NIO
      * Endpoint etc.).
+     * Socket监听
      */
     private final AbstractEndpoint<S> endpoint;
 

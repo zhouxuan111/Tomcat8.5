@@ -60,6 +60,7 @@ import org.xml.sax.Attributes;
  * not be invoked. If a CallMethodRule is expecting more than one parameter,
  * then it is always invoked, regardless of whether the parameters were
  * available or not (missing parameters are passed as null values).</p>
+ * 在end()方法调用时，执行栈顶部对象的某个方法，参数由CallParamRule决定。
  */
 
 public class CallMethodRule extends Rule {

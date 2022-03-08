@@ -1555,12 +1555,11 @@ public class Digester extends DefaultHandler2 {
      *
      * @param pattern Element matching pattern
      * @param rule Rule to be registered
+     * 为匹配模式添加一个指定规则
      */
     public void addRule(String pattern, Rule rule) {
-
         rule.setDigester(this);
         getRules().add(pattern, rule);
-
     }
 
 

@@ -24,6 +24,8 @@ import org.xml.sax.Attributes;
  * Rule implementation that creates a new object and pushes it
  * onto the object stack.  When the element is complete, the
  * object will be popped
+ * 调用begin方法时，将指定的Java类实例化，并将其放入对象栈
+ * 调用end()方法时，从栈中取出
  */
 
 public class ObjectCreateRule extends Rule {
